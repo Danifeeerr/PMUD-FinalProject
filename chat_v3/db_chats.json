@@ -1,0 +1,28 @@
+{
+  "users": [
+    {"id": "1", "name": "Maria", "password": "mar"},
+    {"id": "2", "name": "Joan", "password": "jon"},
+    {"id": "3", "name": "Anna", "password": "ann"},
+    {"id": "4", "name": "Pol", "password": "pol"}
+  ],
+  "chats": [
+    {"id": "1", "datetime": "2019-12-14 10:01:10"},
+    {"id": "2", "datetime": "2019-12-17 10:00:07"},
+    {"id": "3", "datetime": "2019-12-15 10:03:06"}
+  ],
+  "users_chats": [
+    {"id": "1", "chatId": "1", "userId": "1"},
+    {"id": "2", "chatId": "1", "userId": "2"},
+    {"id": "3", "chatId": "1", "userId": "3"},
+    {"id": "4", "chatId": "2", "userId": "1"},
+    {"id": "5", "chatId": "2", "userId": "3"},
+    {"id": "6", "chatId": "3", "userId": "1"}
+  ],
+  "messages": [
+    {"id": "1", "chatId": "1", "userId": "1", "text": "Hi Joan", "datetime": "2019-12-13T10:00:05"},
+    {"id": "2", "chatId": "1", "userId": "2", "text": "Hi Maria", "datetime": "2019-12-14T10:00:07"},
+    {"id": "3", "chatId": "1", "userId": "1", "text": "Let's go to the cinema tonight", "datetime": "2019-12-14T10:01:10"},
+    {"id": "4", "chatId": "2", "userId": "1", "text": "Very well", "datetime": "2019-12-14T10:00:07"},
+    {"id": "5", "chatId": "2", "userId": "3", "text": "How are you?", "datetime": "2019-12-14T09:59:05"}
+  ]
+}
