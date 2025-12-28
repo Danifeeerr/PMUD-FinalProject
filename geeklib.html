@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Videogames Manager</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="lib/style.css">
+</head>
+
+<body>
+	<div id="header">
+		<input class="username" type="text" placeholder="user name">
+		<input class="password" type="password" placeholder="password">
+		<button class="login" type="button">Login</button>
+		<button class="create" type="button">Create</button>
+		<span class="username-display"></span>
+		<img class="logout" title="Logout" src="public/icon_logout.png"/>
+		<footer class="message"></footer>
+	</div>
+  
+	<div id="lists">
+		<div class="lists-header">
+			<h2>My Game Lists</h2>
+			<button class="new_list" type="button">+ New List</button>
+			<button class="add_list" type="button">Add</button>
+			<button class="cancel_list" type="button">Cancel</button>
+		</div>
+		<input class="search" type="text" placeholder="Search lists or games...">
+		<img class="dsearch" title="Clean Search" src="public/icon_delete.png"/>
+		<section class="content"></section>
+	</div>
+
+	<!-- POPUP MODAL -->
+	<div id="popup-overlay">
+		<div id="popup-modal">
+			<div class="popup-header">
+				<h2 id="popup-title"></h2>
+				<span class="popup-close">&times;</span>
+			</div>
+			<div class="popup-search">
+				<input class="videogames-search" type="text" placeholder="Search games in this list...">
+				<img class="videogames-dsearch" title="Clean Search" src="public/icon_delete.png"/>
+			</div>
+			<section class="popup-content"></section>
+		</div>
+	</div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="lib/cookie.js"></script>
+  <script src="videogames_view_controller.js"></script>
+</body>
+</html>

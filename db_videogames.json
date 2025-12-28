@@ -1,0 +1,85 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "demo",
+      "password": "demo"
+    }
+  ],
+  "videogames": [
+    {
+      "id": "1",
+      "title": "The Legend of Zelda: Breath of the Wild",
+      "release_year": 2017
+    },
+    {
+      "id": "2",
+      "title": "God of War",
+      "release_year": 2018
+    }
+  ],
+  "lists": [
+    {
+      "id": "1",
+      "userid": "1",
+      "listname": "My Favorite Games"
+    },
+    {
+      "id": "2",
+      "userid": "1",
+      "listname": "novallista"
+    },
+    {
+      "id": "3",
+      "userid": "1",
+      "listname": "asedr"
+    },
+    {
+      "id": "4",
+      "userid": "1",
+      "listname": "ewr"
+    },
+    {
+      "id": "5",
+      "userid": "1",
+      "listname": "er"
+    }
+  ],
+  "videogames_lists": [
+    {
+      "id": "1",
+      "videogameid": "1",
+      "listid": "1"
+    },
+    {
+      "id": "2",
+      "videogameid": "2",
+      "listid": "1"
+    },
+    {
+      "id": "3",
+      "videogameid": "2",
+      "listid": "2"
+    },
+    {
+      "id": "4",
+      "videogameid": "1",
+      "listid": "2"
+    },
+    {
+      "id": "5",
+      "videogameid": "2",
+      "listid": "3"
+    },
+    {
+      "id": "6",
+      "videogameid": "2",
+      "listid": "4"
+    },
+    {
+      "id": "7",
+      "videogameid": "2",
+      "listid": "5"
+    }
+  ]
+}
