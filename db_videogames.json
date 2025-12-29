@@ -4,6 +4,11 @@
       "id": "1",
       "username": "demo",
       "password": "demo"
+    },
+    {
+      "id": "2",
+      "username": "Danifer",
+      "password": "siome"
     }
   ],
   "videogames": [
@@ -43,6 +48,11 @@
       "id": "5",
       "userid": "1",
       "listname": "er"
+    },
+    {
+      "id": "6",
+      "userid": "2",
+      "listname": "asd"
     }
   ],
   "videogames_lists": [
@@ -80,6 +90,16 @@
       "id": "7",
       "videogameid": "2",
       "listid": "5"
+    },
+    {
+      "id": "8",
+      "videogameid": "2",
+      "listid": "6"
+    },
+    {
+      "id": "9",
+      "videogameid": "1",
+      "listid": "6"
     }
   ]
 }

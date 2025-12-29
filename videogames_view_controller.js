@@ -2,17 +2,25 @@
 $(function() {
   let url = "http://localhost:3000";
 
-  console.log("Cookie raw username:", Cookie.get("username"));
-  console.log("Cookie raw userId:", Cookie.get("userId"));
+  // Leer desde localStorage
+  let username = localStorage.getItem("username") || "";
+  let userId = localStorage.getItem("userId");
+  
+  // Convertir userId a número
+  if (userId) {
+    userId = parseInt(userId);
+    if (isNaN(userId)) {
+      userId = undefined;
+    }
+  }
 
-  let username = Cookie.get("username") ? JSON.parse(Cookie.get("username")) : "";
-  let userId = Cookie.get("userId") ? JSON.parse(Cookie.get("userId")) : undefined;
-  console.log("Username parsed:", username);
-  console.log("UserId parsed:", userId);
+  console.log("Username:", username);
+  console.log("UserId:", userId);
   console.log("UserId type:", typeof userId);
+
   let videogames;  // List of all videogames
   let lists;       // List of lists of the current user
-  let listId;      // Id of the current list
+  let listId = undefined;      // Id of the current list - INICIALIZAR EXPLÍCITAMENTE
   let listGames;   // List of videogames in the current list
   let new_list = false; // If we are creating a new list or using existing ones
 
@@ -38,7 +46,7 @@ const loginView = function() {
 };
 
 const logoutView = function() {
-  $("#header>input.username").val(username).show().prop("readonly", false);
+  $("#header>input.username").val("").show().prop("readonly", false);
   $('#header>input.password').val("").show();
   $('#header>.login').show();
   $('#header>.create').show();
@@ -125,18 +133,19 @@ async function fetchJSON(url, options = {}) {
 }
 
 const loginController = async function(create) {
-  username     = $('#header>input.username').val();
+  username = $('#header>input.username').val();
   let password = $('#header>input.password').val();
+  
   if (username === "" || password === "") {
     $('#header>.message').html("Missing username or password");
     return;
   }
-  Cookie.set("username", JSON.stringify(username), 7);
 
   try {
     const us = await fetchJSON(
       url + '/users?' + new URLSearchParams({ username: username })
     );
+    
     if (us.length === 0) {
       if (create) {
         const u = await fetchJSON(url + '/users', {
@@ -147,20 +156,22 @@ const loginController = async function(create) {
           })
         });
         userId = u.id;
-        Cookie.set("userId", JSON.stringify(userId), 7); // ← AÑADIR
+        localStorage.setItem("username", username);
+        localStorage.setItem("userId", String(userId));
         loginView();
         listsController();
-      } else
+      } else {
         $('#header>.message').html("Wrong username or password");
-    }
-    else {
-      if (create)
+      }
+    } else {
+      if (create) {
         $('#header>.message').html("User name already exists");
-      else if (us[0].password !== password)
+      } else if (us[0].password !== password) {
         $('#header>.message').html("Wrong username or password");
-      else {
+      } else {
         userId = us[0].id;
-        Cookie.set("userId", JSON.stringify(userId), 7); // ← AÑADIR
+        localStorage.setItem("username", username);
+        localStorage.setItem("userId", String(userId));
         loginView();
         listsController();
       }
@@ -172,9 +183,11 @@ const loginController = async function(create) {
 
 const logoutController = function() {
   userId = undefined;
+  username = "";
   lists = [];
   listId = undefined;
-  Cookie.set("userId", JSON.stringify(undefined), 7); // ← AÑADIR
+  localStorage.removeItem("userId");
+  localStorage.removeItem("username");
   logoutView();
 };
 
@@ -190,6 +203,7 @@ const listsController = async function() {
     $('.cancel_list').hide();
     $('.search').val("");
     new_list = false;
+    closePopup(); // ASEGURAR QUE EL POPUP ESTÉ CERRADO
 
   } catch (error) {
     errorView(error.message);
@@ -377,11 +391,16 @@ const eventsController = function() {
 
 eventsController();
 
-// Auto-login si hay userId guardado
-if (userId) {
+// Auto-login con localStorage
+console.log("Checking auto-login - userId:", userId, "username:", username);
+
+if (userId && username) {
+  console.log("Auto-login activado");
   loginView();
   listsController();
 } else {
+  console.log("Mostrando vista de logout");
   logoutView();
 }
+
 });
