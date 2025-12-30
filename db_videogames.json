@@ -30,76 +30,66 @@
       "listname": "My Favorite Games"
     },
     {
-      "id": "2",
-      "userid": "1",
-      "listname": "novallista"
-    },
-    {
       "id": "3",
-      "userid": "1",
-      "listname": "asedr"
-    },
-    {
-      "id": "4",
-      "userid": "1",
-      "listname": "ewr"
-    },
-    {
-      "id": "5",
-      "userid": "1",
-      "listname": "er"
-    },
-    {
-      "id": "6",
       "userid": "2",
-      "listname": "asd"
+      "listname": "PruebaDanifer"
     }
   ],
   "videogames_lists": [
     {
-      "id": "1",
-      "videogameid": "1",
-      "listid": "1"
-    },
-    {
-      "id": "2",
+      "id": "14",
       "videogameid": "2",
-      "listid": "1"
+      "listid": "9"
     },
     {
-      "id": "3",
-      "videogameid": "2",
-      "listid": "2"
-    },
-    {
-      "id": "4",
+      "id": "15",
       "videogameid": "1",
-      "listid": "2"
+      "listid": "9"
     },
     {
-      "id": "5",
+      "id": "16",
+      "videogameid": "2",
+      "listid": "10"
+    },
+    {
+      "id": "17",
+      "videogameid": "1",
+      "listid": "10"
+    },
+    {
+      "id": "18",
+      "videogameid": "2",
+      "listid": "11"
+    },
+    {
+      "id": "19",
+      "videogameid": "2",
+      "listid": "12"
+    },
+    {
+      "id": "20",
+      "videogameid": "1",
+      "listid": "12"
+    },
+    {
+      "id": "21",
       "videogameid": "2",
       "listid": "3"
     },
     {
-      "id": "6",
-      "videogameid": "2",
-      "listid": "4"
-    },
-    {
-      "id": "7",
-      "videogameid": "2",
-      "listid": "5"
-    },
-    {
-      "id": "8",
-      "videogameid": "2",
-      "listid": "6"
-    },
-    {
-      "id": "9",
+      "id": "22",
       "videogameid": "1",
-      "listid": "6"
+      "listid": "3"
+    },
+    {
+      "id": "25",
+      "videogameid": "2",
+      "listid": "1"
+    },
+    {
+      "id": "26",
+      "videogameid": "1",
+      "listid": "1"
     }
   ]
 }

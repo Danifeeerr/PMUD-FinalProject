@@ -1,406 +1,366 @@
 /*jshint esversion: 6 */
 $(function() {
-  let url = "http://localhost:3000";
-
-  // Leer desde localStorage
+  const API = "http://localhost:3000";
   let username = localStorage.getItem("username") || "";
-  let userId = localStorage.getItem("userId");
-  
-  // Convertir userId a número
-  if (userId) {
-    userId = parseInt(userId);
-    if (isNaN(userId)) {
-      userId = undefined;
-    }
-  }
+  let userId = parseInt(localStorage.getItem("userId"));
+  let videogames, lists, listId, listGames, isNewListMode = false;
 
-  console.log("Username:", username);
-  console.log("UserId:", userId);
-  console.log("UserId type:", typeof userId);
 
-  let videogames;  // List of all videogames
-  let lists;       // List of lists of the current user
-  let listId = undefined;      // Id of the current list - INICIALIZAR EXPLÍCITAMENTE
-  let listGames;   // List of videogames in the current list
-  let new_list = false; // If we are creating a new list or using existing ones
-
-// VIEWs
-
-const errorView = function(error) {
-  $('#header>.message').html("Connection error: " + error);
-  setTimeout(() => { // Removes error message after 5 seconds
-    $('#header>.message').html("");
-  }, 5000);
-};
-
-const loginView = function() {
-  $('#header>.message').html("");
-  $("#header>input.username").hide();
-  $('#header>input.password').hide();
-  $('#header>.login').hide();
-  $('#header>.create').hide();
-  $('#header>.logout').show();
-  $('#header>.username-display').show().text(username);
-  $('#lists').show();
-  $('#lists>.search').val("");
-};
-
-const logoutView = function() {
-  $("#header>input.username").val("").show().prop("readonly", false);
-  $('#header>input.password').val("").show();
-  $('#header>.login').show();
-  $('#header>.create').show();
-  $('#header>.logout').hide();
-  $('#header>.username-display').hide();
-  $('#lists').hide();
-  closePopup();
-};
-
-const listListView = function(lists) {
-  let view = '';
-  for (let l of lists) {
-    view += `
-    <div class="list-card" listid="${l.id}">
-      <div class="list-card-header">
-        <h3 class="list" listid="${l.id}">${l.listname}</h3>
-        <img class="delete" listid="${l.id}" title="Delete" src="public/icon_delete.png"/>
-      </div>
-      <div class="list-card-footer">
-        <span>Click to view games</span>
-      </div>
-    </div>\n`;
-  }
-  return view;
-};
-
-const videogameListView = function(videogames) {
-  let view = '';
-  for (let v of videogames) {
-    view += `
-    <div class="videogame-card" videogameid="${v.id}">
-      <span class="videogame" videogameid="${v.id}">${v.title}</span>
-      <span class="year">${v.release_year}</span>
-    </div>\n`;
-  }
-  return view;
-};
-
-const listVideogamesView = function(listGames) { 
-  let view = '';
-  if (listGames.length === 0) {
-    return '<p class="empty-list">No games in this list yet.</p>';
-  }
-  for (let vl of listGames) {
-    view += `
-    <div class="popup-game-item" videogamelistid="${vl.id}">
-      <div class="game-info">
-        <span class="game-title">${vl.videogame.title}</span>
-        <span class="game-year">${vl.videogame.release_year}</span>
-      </div>
-      <img class="remove" videogamelistid="${vl.id}" title="Remove" src="public/icon_delete.png"/>
-    </div>\n`;
-  }
-  return view;
-};
-
-// POPUP Functions
-const openPopup = function(listName) {
-  $('#popup-title').text(listName);
-  $('#popup-overlay').show();
-  $('body').css('overflow', 'hidden');
-};
-
-const closePopup = function() {
-  $('#popup-overlay').hide();
-  $('body').css('overflow', 'auto');
-  listId = undefined;
-};
-
-// CONTROLLERs
-
-async function fetchJSON(url, options = {}) {
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
+async function api(endpoint, options = {}) {
+  const response = await fetch(`${API}${endpoint}`, {
+    headers: {'Content-Type': 'application/json'},
     ...options
   });
-
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-  return response.json();
+  if (!response.ok) throw new Error(response.statusText);
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
 }
 
-const loginController = async function(create) {
-  username = $('#header>input.username').val();
-  let password = $('#header>input.password').val();
-  
-  if (username === "" || password === "") {
-    $('#header>.message').html("Missing username or password");
-    return;
-  }
+const showError = (msg) => {
+  $('#header>.message').html(msg);
+  setTimeout(() => $('#header>.message').html(""), 5000);
+};
 
-  try {
-    const us = await fetchJSON(
-      url + '/users?' + new URLSearchParams({ username: username })
-    );
-    
-    if (us.length === 0) {
-      if (create) {
-        const u = await fetchJSON(url + '/users', {
-          method: 'POST',
-          body: JSON.stringify({
-            username: username,
-            password: password
-          })
-        });
-        userId = u.id;
-        localStorage.setItem("username", username);
-        localStorage.setItem("userId", String(userId));
-        loginView();
-        listsController();
-      } else {
-        $('#header>.message').html("Wrong username or password");
-      }
-    } else {
-      if (create) {
-        $('#header>.message').html("User name already exists");
-      } else if (us[0].password !== password) {
-        $('#header>.message').html("Wrong username or password");
-      } else {
-        userId = us[0].id;
-        localStorage.setItem("username", username);
-        localStorage.setItem("userId", String(userId));
-        loginView();
-        listsController();
-      }
-    }
-  } catch (error) {
-    $('#header>.message').html("Connection error: " + error.message);
+const toggle = (show, hide) => {
+  $(show.join(',')).show();
+  $(hide.join(',')).hide();
+};
+
+const renderLists = (lists) => lists.map(l => `
+  <div class="list-card" data-id="${l.id}">
+    <div class="list-card-header">
+      <h3>${l.listname}</h3>
+      <img class="delete" data-id="${l.id}" src="public/icon_delete.png"/>
+    </div>
+    <div class="list-card-footer">Click to view games</div>
+  </div>`).join('');
+
+const renderGames = (games) => games.map(g => `
+  <div class="videogame-card" data-id="${g.id}">
+    <span>${g.title}</span>
+    <span class="year">${g.release_year}</span>
+  </div>`).join('');
+
+const renderListGames = (listGames) => listGames.length ? listGames.map(lg => `
+  <div class="popup-game-item" data-id="${lg.id}">
+    <div class="game-info">
+      <span class="game-title">${lg.videogame.title}</span>
+      <span class="game-year">${lg.videogame.release_year}</span>
+    </div>
+    <img class="remove" data-id="${lg.id}" src="public/icon_delete.png"/>
+  </div>`).join('') : '<p class="empty-list">No games yet</p>';
+
+const popups = {
+  open: (id, callback) => {
+    $(`#${id}`).show();
+    $('body').css('overflow', 'hidden');
+    callback?.();
+  },
+  close: (id, cleanup) => {
+    $(`#${id}`).hide();
+    $('body').css('overflow', 'auto');
+    cleanup?.();
+  },
+  closeAll: () => {
+    $('.popup-overlay').hide();
+    $('body').css('overflow', 'auto');
+    listId = undefined;
   }
 };
 
-const logoutController = function() {
+const confirm = (message, onYes) => {
+  $('#confirm-popup-message').text(message);
+  $('#confirm-popup-overlay').data('onConfirm', onYes).show();
+};
+
+async function login(isCreate) {
+  username = $('#header>input.username').val();
+  const password = $('#header>input.password').val();
+  
+  if (!username || !password) return showError("Missing credentials");
+
+  try {
+    const users = await api(`/users?username=${username}`);
+    
+    if (users.length === 0) {
+      if (!isCreate) return showError("Wrong credentials");
+      const user = await api('/users', {
+        method: 'POST',
+        body: JSON.stringify({ username, password })
+      });
+      userId = user.id;
+    } else {
+      if (isCreate) return showError("Username exists");
+      if (users[0].password !== password) return showError("Wrong credentials");
+      userId = users[0].id;
+    }
+    
+    localStorage.setItem("username", username);
+    localStorage.setItem("userId", userId);
+    
+    toggle(['#header>.logout', '#header>.username-display', '#lists'], 
+           ['#header>input', '#header>button.login', '#header>button.create']);
+    $('#header>.username-display').text(username);
+    loadLists();
+  } catch (error) {
+    showError("Connection error");
+  }
+}
+
+function logout() {
   userId = undefined;
   username = "";
-  lists = [];
-  listId = undefined;
-  localStorage.removeItem("userId");
-  localStorage.removeItem("username");
-  logoutView();
-};
+  localStorage.clear();
+  toggle(['#header>input', '#header>button.login', '#header>button.create'],
+         ['#header>.logout', '#header>.username-display', '#lists']);
+  $('#header>input').val('');
+  popups.closeAll();
+}
 
-const listsController = async function() {
+async function loadLists() {
   try {
-    lists = await fetchJSON(
-      url + '/lists?userid=' + userId
-    );
-
-    $('#lists>.content').html(listListView(lists));
-    $('.new_list').show();
-    $('.add_list').hide();
-    $('.cancel_list').hide();
-    $('.search').val("");
-    new_list = false;
-    closePopup(); // ASEGURAR QUE EL POPUP ESTÉ CERRADO
-
+    lists = await api(`/lists?userid=${userId}`);
+    $('#lists>.content').html(renderLists(lists));
+    toggle(['.new_list'], ['.add_list', '.cancel_list']);
+    $('.search').val('');
+    isNewListMode = false;
+    popups.close('popup-overlay');
+    $('#add-games-button').hide();
   } catch (error) {
-    errorView(error.message);
+    showError(error.message);
   }
-};
+}
 
-const listsDeleteController = async function(list_id) {
-  let l = lists.filter(e => e.id == list_id);
-  if (confirm(`Do you want to delete list "${l[0].listname}" and its videogames?`)) {
+async function deleteList(id) {
+  const list = lists.find(l => l.id == id);
+  confirm(`Delete "${list.listname}"?`, async () => {
     try {
-      await fetchJSON(url + '/lists/' + list_id, { method: 'DELETE' });
-
-      lists = lists.filter(e => e.id != list_id);
-      $('#lists>.content').html(listListView(lists));
-
-      if (listId == list_id) {
-        closePopup();
-      }
+      await api(`/lists/${id}`, { method: 'DELETE' });
+      lists = lists.filter(l => l.id != id);
+      $('#lists>.content').html(renderLists(lists));
+      if (listId == id) popups.close('popup-overlay');
     } catch (error) {
-      errorView(error.message);
+      showError(error.message);
     }
-  }
-};
+  });
+}
 
-const listsNewController = async function() {
+async function startNewList() {
   try {
-    videogames = await fetchJSON(url + '/videogames');
-    videogames.sort((v1, v2) => v1.title.localeCompare(v2.title));
-
-    $('#lists>.content').html(videogameListView(videogames));
-    $('.new_list').hide();
-    $('.add_list').show();
-    $('.cancel_list').show();
-    $('.search').val("");
-    new_list = true;
-
+    videogames = await api('/videogames');
+    videogames.sort((a, b) => a.title.localeCompare(b.title));
+    $('#lists>.content').html(renderGames(videogames));
+    toggle(['.add_list', '.cancel_list'], ['.new_list']);
+    isNewListMode = true;
   } catch (error) {
-    errorView(error.message);
+    showError(error.message);
   }
-};
+}
 
-const listsAddController = async function() {
-  let vgs = [];
-  $('.videogame-card.active').each((i, e) => vgs.push($(e).attr('videogameid')));
+async function saveNewList() {
+  popups.open('name-popup-overlay', () => $('#list-name-input').val('').focus());
+}
 
-  if (vgs.length === 0) {
-    alert("Please select at least one game");
-    return;
-  }
+async function confirmListName() {
+  const name = $('#list-name-input').val().trim();
+  if (!name) return $('#name-popup-error').text('Enter a name').show();
 
-  let listname = prompt("Enter list name:");
-  if (!listname || listname.trim() === "") {
-    listsController();
-    return;
-  }
-
+  const gameIds = $('#lists .videogame-card.active').map((i, e) => $(e).data('id')).get();
+  
   try {
-    const l = await fetchJSON(url + '/lists', {
+    const list = await api('/lists', {
       method: 'POST',
-      body: JSON.stringify({ 
-        userid: userId,
-        listname: listname.trim()
-      })
+      body: JSON.stringify({ userid: String(userId), listname: name })
     });
-
-    const promises = vgs.map(v =>
-      fetchJSON(url + '/videogames_lists', {
-        method: 'POST',
-        body: JSON.stringify({ 
-          listid: l.id, 
-          videogameid: String(v) 
+    
+    if (gameIds.length) {
+      await Promise.all(gameIds.map(id =>
+        api('/videogames_lists', {
+          method: 'POST',
+          body: JSON.stringify({ listid: String(list.id), videogameid: String(id) })
         })
-      })
-    );
-
-    await Promise.all(promises);
-    listsController();
-
+      ));
+    }
+    
+    popups.close('name-popup-overlay');
+    loadLists();
   } catch (error) {
-    errorView(error.message);
+    showError(error.message);
   }
-};
+}
 
-const listsSearchController = function(search = "") {
-  if (new_list) {
-    let vgs = videogames.filter(e => e.title.toLowerCase().includes(search.toLowerCase()));
-    $('#lists>.content').html(videogameListView(vgs));
+function search(query) {
+  const q = query.toLowerCase();
+  if (isNewListMode) {
+    const filtered = videogames.filter(g => g.title.toLowerCase().includes(q));
+    $('#lists>.content').html(renderGames(filtered));
   } else {
-    let ls = lists.filter(e => e.listname.toLowerCase().includes(search.toLowerCase()));
-    $('#lists>.content').html(listListView(ls));
+    const filtered = lists.filter(l => l.listname.toLowerCase().includes(q));
+    $('#lists>.content').html(renderLists(filtered));
   }
-};
+}
 
-const videogamesController = async function(list_id) {
-  listId = list_id;
-  let listName = lists.find(l => l.id == list_id).listname;
-  openPopup(listName);
-  $('.videogames-search').val("");
-  videogamesListController();
-};
+async function openList(id) {
+  listId = id;
+  const list = lists.find(l => l.id == id);
+  $('#popup-title').text(list.listname);
+  $('#add-games-button').show();
+  popups.open('popup-overlay');
+  $('.videogames-search').val('');
+  loadListGames();
+}
 
-const videogamesListController = async function() {
+async function loadListGames() {
   try {
-    listGames = await fetchJSON(
-      url + '/videogames_lists?' +
-      new URLSearchParams({
-        _expand: 'videogame',
-        listid: listId
-      })
+    listGames = await api(`/videogames_lists?_expand=videogame&listid=${listId}`);
+    const query = $('.videogames-search').val().toLowerCase();
+    const filtered = listGames.filter(lg => 
+      lg.videogame.title.toLowerCase().includes(query)
     );
-
-    let search = $('.videogames-search').val();
-    let filtered = listGames.filter(e => e.videogame.title.toLowerCase().includes(search.toLowerCase()));
-
-    $('.popup-content').html(listVideogamesView(filtered));
-
+    $('.popup-content').html(renderListGames(filtered));
   } catch (error) {
-    errorView(error.message);
+    showError(error.message);
   }
-};
+}
 
-const videogameRemoveController = async function(videogamelist_id) {
-  if (confirm("Remove this game from the list?")) {
+async function removeGame(id) {
+  confirm("Remove game?", async () => {
     try {
-      await fetchJSON(url + '/videogames_lists/' + videogamelist_id, {
-        method: 'DELETE'
-      });
-
-      videogamesListController();
-
+      await api(`/videogames_lists/${id}`, { method: 'DELETE' });
+      listGames = listGames.filter(lg => lg.id != id);
+      loadListGames();
     } catch (error) {
-      errorView(error.message);
+      showError(error.message);
     }
+  });
+}
+
+async function openAddGames() {
+  try {
+    videogames = await api('/videogames');
+    videogames.sort((a, b) => a.title.localeCompare(b.title));
+    
+    const existing = listGames.map(lg => lg.videogame.id);
+    const available = videogames.filter(g => !existing.includes(g.id));
+    
+    $('#add-games-content').html(renderGames(available));
+    popups.open('add-games-popup-overlay');
+  } catch (error) {
+    showError(error.message);
   }
-};
+}
 
-// ROUTER
+async function addGames() {
+  const gameIds = $('#add-games-content .videogame-card.active').map((i, e) => $(e).data('id')).get();
+  if (!gameIds.length) return alert("Select games");
+  
+  try {
+    await Promise.all(gameIds.map(id =>
+      api('/videogames_lists', {
+        method: 'POST',
+        body: JSON.stringify({ listid: String(listId), videogameid: String(id) })
+      })
+    ));
+    
+    popups.close('add-games-popup-overlay');
+    loadListGames();
+  } catch (error) {
+    showError(error.message);
+  }
+}
 
-const eventsController = function() {
-  $(document).on('keypress', '#header>input.password', (e) => {if (e.keyCode === 13) loginController(false);});
-  $(document).on('click', '#header>.login', ()=> loginController(false));
-  $(document).on('click', '#header>.create',()=> loginController(true));
-  $(document).on('click', '#header>.logout',()=> logoutController());
-  
-  // Botones de lists
-  $(document).on('click', '.new_list',   () => {new_list = true;  listsNewController();});
-  $(document).on('click', '.add_list',   () => {new_list = false; listsAddController();});
-  $(document).on('click', '.cancel_list',() => {new_list = false; listsController();});
-  
-  // Delete con stopPropagation para que no abra el popup
-  $(document).on('click', '.delete', (e) => {
-    e.stopPropagation(); 
-    listsDeleteController($(e.currentTarget).attr("listid"));
-  });
-  
-  // Búsqueda
-  $(document).on('input', '.search', () => {listsSearchController($('.search').val());});
-  $(document).on('click', '.dsearch', () => {listsSearchController(""); $('.search').val("");});
-  
-  // Click en lista (título o card completo)
-  $(document).on('click', '.list', (e) => {
-    e.stopPropagation();
-    videogamesController($(e.currentTarget).attr("listid"));
-  });
-  $(document).on('click', '.list-card', (e) => {
-    if (!$(e.target).hasClass('delete') && !$(e.target).closest('.delete').length) {
-      videogamesController($(e.currentTarget).attr("listid"));
-    }
-  });
-  
-  // Selección de videojuegos - SOLO click en la card completa
-  $(document).on('click', '.videogame-card', (e) => {
-    $(e.currentTarget).toggleClass("active");
-  });
-  
-  // Popup
-  $(document).on('input', '.videogames-search', () => {videogamesListController();});
-  $(document).on('click', '.videogames-dsearch', () => {$('.videogames-search').val(""); videogamesListController();});
-  $(document).on('click', '.remove', (e) => {videogameRemoveController($(e.currentTarget).attr("videogamelistid"));});
-  $(document).on('click', '.popup-close', () => {closePopup();});
-  $(document).on('click', '#popup-overlay', (e) => {
-    if (e.target.id === 'popup-overlay') closePopup();
-  });
-};
+function searchAddGames(query) {
+  const existing = listGames.map(lg => lg.videogame.id);
+  const filtered = videogames.filter(g => 
+    !existing.includes(g.id) && 
+    g.title.toLowerCase().includes(query.toLowerCase())
+  );
+  $('#add-games-content').html(renderGames(filtered));
+}
 
-eventsController();
+// EVENTS
+$(document).on('keypress', '#header>input.password', (e) => {
+  if (e.keyCode === 13) login(false);
+});
+$(document).on('click', '#header>.login', () => login(false));
+$(document).on('click', '#header>.create', () => login(true));
+$(document).on('click', '#header>.logout', logout);
 
-// Auto-login con localStorage
-console.log("Checking auto-login - userId:", userId, "username:", username);
+$(document).on('click', '.new_list', startNewList);
+$(document).on('click', '.add_list', saveNewList);
+$(document).on('click', '.cancel_list', loadLists);
 
+$(document).on('click', '.delete', (e) => {
+  e.stopPropagation();
+  deleteList($(e.currentTarget).data('id'));
+});
+
+$(document).on('input', '.search', (e) => search($(e.target).val()));
+$(document).on('click', '.dsearch', () => {
+  $('.search').val('');
+  search('');
+});
+
+$(document).on('click', '.list-card', (e) => {
+  if (!$(e.target).hasClass('delete')) openList($(e.currentTarget).data('id'));
+});
+
+$(document).on('click', '.videogame-card', (e) => $(e.currentTarget).toggleClass('active'));
+
+$(document).on('input', '.videogames-search', loadListGames);
+$(document).on('click', '.videogames-dsearch', () => {
+  $('.videogames-search').val('');
+  loadListGames();
+});
+$(document).on('click', '.remove', (e) => removeGame($(e.currentTarget).data('id')));
+$(document).on('click', '.popup-close', () => {
+  popups.close('popup-overlay');
+  listId = undefined;
+  $('#add-games-button').hide();
+});
+$(document).on('click', '#popup-overlay', (e) => {
+  if (e.target.id === 'popup-overlay') {
+    popups.close('popup-overlay');
+    listId = undefined;
+    $('#add-games-button').hide();
+  }
+});
+
+$(document).on('click', '#add-games-button', openAddGames);
+$(document).on('click', '#add-games-confirm', addGames);
+$(document).on('click', '#add-games-cancel', () => popups.close('add-games-popup-overlay'));
+$(document).on('click', '#add-games-popup-overlay', (e) => {
+  if (e.target.id === 'add-games-popup-overlay') popups.close('add-games-popup-overlay');
+});
+$(document).on('input', '#add-games-search', (e) => searchAddGames($(e.target).val()));
+$(document).on('click', '#add-games-dsearch', () => {
+  $('#add-games-search').val('');
+  searchAddGames('');
+});
+
+$(document).on('click', '#name-popup-confirm', confirmListName);
+$(document).on('click', '#name-popup-cancel', () => {
+  popups.close('name-popup-overlay');
+  loadLists();
+});
+$(document).on('keypress', '#list-name-input', (e) => {
+  if (e.keyCode === 13) confirmListName();
+});
+$(document).on('input', '#list-name-input', () => $('#name-popup-error').hide());
+
+$(document).on('click', '#confirm-popup-yes', () => {
+  const onConfirm = $('#confirm-popup-overlay').data('onConfirm');
+  popups.close('confirm-popup-overlay');
+  onConfirm?.();
+});
+$(document).on('click', '#confirm-popup-no', () => popups.close('confirm-popup-overlay'));
+
+// Auto-login
 if (userId && username) {
-  console.log("Auto-login activado");
-  loginView();
-  listsController();
-} else {
-  console.log("Mostrando vista de logout");
-  logoutView();
+  toggle(['#header>.logout', '#header>.username-display', '#lists'],
+         ['#header>input', '#header>button.login', '#header>button.create']);
+  $('#header>.username-display').text(username);
+  loadLists();
 }
 
 });

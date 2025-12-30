@@ -5,189 +5,122 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); 
-
+app.use(express.static('public'));
 
 const DB_FILE = path.join(__dirname, 'db_videogames.json');
 
+const readDB = () => JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+const writeDB = (data) => fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+const getNextId = (array) => String(array.length ? Math.max(...array.map(i => parseInt(i.id))) + 1 : 1);
 
-function readDB() {
-  const data = fs.readFileSync(DB_FILE, 'utf8');
-  return JSON.parse(data);
-}
-
-
-function writeDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-}
-
-function getNextId(array) {
-  if (array.length === 0) return "1";
-  const maxId = Math.max(...array.map(item => parseInt(item.id)));
-  return String(maxId + 1);
-}
-
-
-app.get('/users', (req, res) => {
+const getAll = (collection, filter) => {
   const db = readDB();
-  const { username } = req.query;
-  
-  if (username) {
-    const filtered = db.users.filter(u => u.username === username);
-    return res.json(filtered);
-  }
-  
-  res.json(db.users);
-});
+  return filter ? db[collection].filter(filter) : db[collection];
+};
 
+const getById = (collection, id) => {
+  const db = readDB();
+  return db[collection].find(item => item.id === id);
+};
+
+const create = (collection, data) => {
+  const db = readDB();
+  const newItem = { id: getNextId(db[collection]), ...data };
+  db[collection].push(newItem);
+  writeDB(db);
+  return newItem;
+};
+
+const deleteById = (collection, id, cascade) => {
+  const db = readDB();
+  const index = db[collection].findIndex(item => item.id === id);
+  if (index === -1) return false;
+  
+  db[collection].splice(index, 1);
+  if (cascade) cascade(db, id);
+  writeDB(db);
+  return true;
+};
+
+// Users
+app.get('/users', (req, res) => {
+  const users = getAll('users', req.query.username ? u => u.username === req.query.username : null);
+  res.json(users);
+});
 
 app.post('/users', (req, res) => {
-  const db = readDB();
-  const newUser = {
-    id: getNextId(db.users),
-    username: req.body.username,
-    password: req.body.password
-  };
-  
-  db.users.push(newUser);
-  writeDB(db);
-  res.status(201).json(newUser);
+  const user = create('users', { username: req.body.username, password: req.body.password });
+  res.status(201).json(user);
 });
 
-
-app.get('/videogames', (req, res) => {
-  const db = readDB();
-  res.json(db.videogames);
-});
-
-
+// Videogames
+app.get('/videogames', (req, res) => res.json(getAll('videogames')));
 app.get('/videogames/:id', (req, res) => {
-  const db = readDB();
-  const videogame = db.videogames.find(v => v.id === req.params.id);
-  
-  if (!videogame) {
-    return res.status(404).json({ error: 'Videogame not found' });
-  }
-  
-  res.json(videogame);
+  const game = getById('videogames', req.params.id);
+  game ? res.json(game) : res.status(404).json({ error: 'Not found' });
 });
 
 app.post('/videogames', (req, res) => {
-  const db = readDB();
-  const newVideogame = {
-    id: getNextId(db.videogames),
-    title: req.body.title,
-    release_year: req.body.release_year
-  };
-  
-  db.videogames.push(newVideogame);
-  writeDB(db);
-  res.status(201).json(newVideogame);
+  const game = create('videogames', { title: req.body.title, release_year: req.body.release_year });
+  res.status(201).json(game);
 });
 
+// Lists
 app.get('/lists', (req, res) => {
-  const db = readDB();
-  const { userid } = req.query;
-  
-  if (userid) {
-    const filtered = db.lists.filter(l => l.userid === userid);
-    return res.json(filtered);
-  }
-  
-  res.json(db.lists);
+  const lists = getAll('lists', req.query.userid ? l => l.userid === req.query.userid : null);
+  res.json(lists);
 });
-
 
 app.get('/lists/:id', (req, res) => {
-  const db = readDB();
-  const list = db.lists.find(l => l.id === req.params.id);
-  
-  if (!list) {
-    return res.status(404).json({ error: 'List not found' });
-  }
-  
-  res.json(list);
+  const list = getById('lists', req.params.id);
+  list ? res.json(list) : res.status(404).json({ error: 'Not found' });
 });
 
 app.post('/lists', (req, res) => {
-  const db = readDB();
-  const newList = {
-    id: getNextId(db.lists),
-    userid: req.body.userid,
-    listname: req.body.listname
-  };
-  
-  db.lists.push(newList);
-  writeDB(db);
-  res.status(201).json(newList);
+  const list = create('lists', { userid: req.body.userid, listname: req.body.listname });
+  res.status(201).json(list);
 });
-
 
 app.delete('/lists/:id', (req, res) => {
-  const db = readDB();
-  const listIndex = db.lists.findIndex(l => l.id === req.params.id);
-  
-  if (listIndex === -1) {
-    return res.status(404).json({ error: 'List not found' });
-  }
-  
-
-  db.videogames_lists = db.videogames_lists.filter(vl => vl.listid !== req.params.id);
-  
-  db.lists.splice(listIndex, 1);
-  writeDB(db);
-  res.status(204).send();
+  const deleted = deleteById('lists', req.params.id, (db, id) => {
+    db.videogames_lists = db.videogames_lists.filter(vl => vl.listid !== id);
+  });
+  deleted ? res.status(204).send() : res.status(404).json({ error: 'Not found' });
 });
 
+// Videogames_lists
 app.get('/videogames_lists', (req, res) => {
   const db = readDB();
-  const { listid, _expand } = req.query;
+  let items = db.videogames_lists;
   
-  let filtered = db.videogames_lists;
-  
-  if (listid) {
-    filtered = filtered.filter(vl => vl.listid === listid);
+  if (req.query.listid) {
+    items = items.filter(vl => vl.listid === req.query.listid);
   }
   
-  if (_expand === 'videogame') {
-    filtered = filtered.map(vl => {
-      const videogame = db.videogames.find(v => v.id === vl.videogameid);
-      return { ...vl, videogame };
-    });
+  if (req.query._expand === 'videogame') {
+    items = items.map(vl => ({
+      ...vl,
+      videogame: db.videogames.find(v => v.id === vl.videogameid)
+    }));
   }
   
-  res.json(filtered);
+  res.json(items);
 });
 
 app.post('/videogames_lists', (req, res) => {
-  const db = readDB();
-  const newRelation = {
-    id: getNextId(db.videogames_lists),
+  const relation = create('videogames_lists', {
     videogameid: req.body.videogameid,
     listid: req.body.listid
-  };
-  
-  db.videogames_lists.push(newRelation);
-  writeDB(db);
-  res.status(201).json(newRelation);
+  });
+  res.status(201).json(relation);
 });
 
 app.delete('/videogames_lists/:id', (req, res) => {
-  const db = readDB();
-  const relationIndex = db.videogames_lists.findIndex(vl => vl.id === req.params.id);
-  
-  if (relationIndex === -1) {
-    return res.status(404).json({ error: 'Relation not found' });
-  }
-  
-  db.videogames_lists.splice(relationIndex, 1);
-  writeDB(db);
-  res.status(204).send();
+  const deleted = deleteById('videogames_lists', req.params.id);
+  deleted ? res.status(204).send() : res.status(404).json({ error: 'Not found' });
 });
-
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

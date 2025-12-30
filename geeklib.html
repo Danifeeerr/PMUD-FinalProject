@@ -44,8 +44,62 @@
 		</div>
 	</div>
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="lib/cookie.js"></script>
-  <script src="videogames_view_controller.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="lib/cookie.js"></script>
+	<script src="videogames_view_controller.js"></script>
+
+	<div id="name-popup-overlay" style="display: none;">
+	<div id="name-popup">
+		<div class="name-popup-header">
+		<h3>Enter List Name</h3>
+		</div>
+		<div class="name-popup-body">
+		<input type="text" id="list-name-input" placeholder="My awesome list..." maxlength="50">
+		<span id="name-popup-error" style="display: none;"></span>
+		</div>
+		<div class="name-popup-footer">
+		<button id="name-popup-cancel" class="btn-secondary">Cancel</button>
+		<button id="name-popup-confirm" class="btn-primary">Create List</button>
+		</div>
+	</div>
+	</div>
+
+	<div id="confirm-popup-overlay" style="display: none;">
+	<div id="confirm-popup">
+		<div class="confirm-popup-header">
+		<h3>Confirm Action</h3>
+		</div>
+		<div class="confirm-popup-body">
+		<p id="confirm-popup-message"></p>
+		</div>
+		<div class="confirm-popup-footer">
+		<button id="confirm-popup-no" class="btn-secondary">No</button>
+		<button id="confirm-popup-yes" class="btn-danger">Yes</button>
+		</div>
+	</div>
+	</div>
+
+
+
+	<button id="add-games-button">+ Add Games</button>
+
+
+	<div id="add-games-popup-overlay" style="display: none;">
+	<div id="add-games-popup">
+		<div class="add-games-popup-header">
+		<h3>Add Games to List</h3>
+		</div>
+		<div class="add-games-popup-search">
+		<input type="text" id="add-games-search" placeholder="Search games...">
+		<img id="add-games-dsearch" title="Clean Search" src="public/icon_delete.png"/>
+		</div>
+		<div id="add-games-content"></div>
+		<div class="add-games-popup-footer">
+		<button id="add-games-cancel" class="btn-secondary">Cancel</button>
+		<button id="add-games-confirm" class="btn-primary">Add Selected</button>
+		</div>
+	</div>
+	</div>
+
 </body>
 </html>
