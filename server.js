@@ -57,15 +57,7 @@ app.post('/users', (req, res) => {
 
 // Videogames
 app.get('/videogames', (req, res) => res.json(getAll('videogames')));
-app.get('/videogames/:id', (req, res) => {
-  const game = getById('videogames', req.params.id);
-  game ? res.json(game) : res.status(404).json({ error: 'Not found' });
-});
 
-app.post('/videogames', (req, res) => {
-  const game = create('videogames', { title: req.body.title, release_year: req.body.release_year });
-  res.status(201).json(game);
-});
 
 // Lists
 app.get('/lists', (req, res) => {

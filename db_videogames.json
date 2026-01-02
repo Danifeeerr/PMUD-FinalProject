@@ -33,6 +33,11 @@
       "id": "3",
       "userid": "2",
       "listname": "PruebaDanifer"
+    },
+    {
+      "id": "4",
+      "userid": "1",
+      "listname": "asdasd"
     }
   ],
   "videogames_lists": [
@@ -72,11 +77,6 @@
       "listid": "12"
     },
     {
-      "id": "21",
-      "videogameid": "2",
-      "listid": "3"
-    },
-    {
       "id": "22",
       "videogameid": "1",
       "listid": "3"
@@ -90,6 +90,16 @@
       "id": "26",
       "videogameid": "1",
       "listid": "1"
+    },
+    {
+      "id": "27",
+      "videogameid": "1",
+      "listid": "4"
+    },
+    {
+      "id": "28",
+      "videogameid": "2",
+      "listid": "3"
     }
   ]
 }
