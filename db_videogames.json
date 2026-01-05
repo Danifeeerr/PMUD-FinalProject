@@ -270,19 +270,9 @@
       "listname": "My Favorite Games"
     },
     {
-      "id": "3",
-      "userid": "2",
-      "listname": "PruebaDanifer"
-    },
-    {
-      "id": "4",
-      "userid": "1",
-      "listname": "asdasd"
-    },
-    {
       "id": "5",
       "userid": "2",
-      "listname": "newList"
+      "listname": "Favourite games"
     }
   ],
   "videogames_lists": [
@@ -322,11 +312,6 @@
       "listid": "12"
     },
     {
-      "id": "22",
-      "videogameid": "1",
-      "listid": "3"
-    },
-    {
       "id": "25",
       "videogameid": "2",
       "listid": "1"
@@ -337,83 +322,23 @@
       "listid": "1"
     },
     {
-      "id": "27",
-      "videogameid": "1",
-      "listid": "4"
-    },
-    {
-      "id": "28",
-      "videogameid": "2",
-      "listid": "3"
-    },
-    {
       "id": "29",
-      "videogameid": "49",
+      "videogameid": "30",
       "listid": "5"
     },
     {
       "id": "30",
-      "videogameid": "4",
+      "videogameid": "48",
       "listid": "5"
     },
     {
       "id": "31",
-      "videogameid": "18",
+      "videogameid": "5",
       "listid": "5"
     },
     {
       "id": "32",
-      "videogameid": "44",
-      "listid": "5"
-    },
-    {
-      "id": "33",
-      "videogameid": "21",
-      "listid": "5"
-    },
-    {
-      "id": "42",
-      "videogameid": "37",
-      "listid": "5"
-    },
-    {
-      "id": "43",
-      "videogameid": "7",
-      "listid": "5"
-    },
-    {
-      "id": "44",
-      "videogameid": "38",
-      "listid": "5"
-    },
-    {
-      "id": "45",
-      "videogameid": "43",
-      "listid": "5"
-    },
-    {
-      "id": "46",
-      "videogameid": "17",
-      "listid": "5"
-    },
-    {
-      "id": "47",
-      "videogameid": "3",
-      "listid": "5"
-    },
-    {
-      "id": "48",
-      "videogameid": "2",
-      "listid": "5"
-    },
-    {
-      "id": "49",
-      "videogameid": "8",
-      "listid": "5"
-    },
-    {
-      "id": "50",
-      "videogameid": "42",
+      "videogameid": "45",
       "listid": "5"
     }
   ]

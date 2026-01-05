@@ -622,3 +622,15 @@ body {
     padding: 15px 20px;
   }
 }
+
+#popup-modal {
+  max-height: 90vh; /* Limita la altura del modal */
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-content {
+  overflow-y: auto; /* Permite scroll vertical */
+  flex: 1; /* Ocupa el espacio disponible */
+  max-height: calc(90vh - 200px); /* Resta el espacio del header y search */
+}
