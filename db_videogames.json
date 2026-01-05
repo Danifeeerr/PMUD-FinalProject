@@ -21,6 +21,246 @@
       "id": "2",
       "title": "God of War",
       "release_year": 2018
+    },
+    {
+      "id": "3",
+      "title": "Ghost of Tsushima",
+      "release_year": 2020
+    },
+    {
+      "id": "4",
+      "title": "Cyberpunk 2077",
+      "release_year": 2020
+    },
+    {
+      "id": "5",
+      "title": "Baldur's Gate 3",
+      "release_year": 2023
+    },
+    {
+      "id": "6",
+      "title": "It Takes Two",
+      "release_year": 2021
+    },
+    {
+      "id": "7",
+      "title": "Elden Ring",
+      "release_year": 2022
+    },
+    {
+      "id": "8",
+      "title": "Hades",
+      "release_year": 2020
+    },
+    {
+      "id": "9",
+      "title": "Red Dead Redemption 2",
+      "release_year": 2018
+    },
+    {
+      "id": "10",
+      "title": "The Last of Us Part II",
+      "release_year": 2020
+    },
+    {
+      "id": "11",
+      "title": "Resident Evil Village",
+      "release_year": 2021
+    },
+    {
+      "id": "12",
+      "title": "Horizon Forbidden West",
+      "release_year": 2022
+    },
+    {
+      "id": "13",
+      "title": "God of War Ragnarök",
+      "release_year": 2022
+    },
+    {
+      "id": "14",
+      "title": "Marvel's Spider-Man 2",
+      "release_year": 2023
+    },
+    {
+      "id": "15",
+      "title": "Starfield",
+      "release_year": 2023
+    },
+    {
+      "id": "16",
+      "title": "The Legend of Zelda: Tears of the Kingdom",
+      "release_year": 2023
+    },
+    {
+      "id": "17",
+      "title": "Final Fantasy VII Remake",
+      "release_year": 2020
+    },
+    {
+      "id": "18",
+      "title": "Demon's Souls",
+      "release_year": 2020
+    },
+    {
+      "id": "19",
+      "title": "Returnal",
+      "release_year": 2021
+    },
+    {
+      "id": "20",
+      "title": "Deathloop",
+      "release_year": 2021
+    },
+    {
+      "id": "21",
+      "title": "Forza Horizon 5",
+      "release_year": 2021
+    },
+    {
+      "id": "22",
+      "title": "Metroid Dread",
+      "release_year": 2021
+    },
+    {
+      "id": "23",
+      "title": "Ratchet & Clank: Rift Apart",
+      "release_year": 2021
+    },
+    {
+      "id": "24",
+      "title": "Psychonauts 2",
+      "release_year": 2021
+    },
+    {
+      "id": "25",
+      "title": "Stray",
+      "release_year": 2022
+    },
+    {
+      "id": "26",
+      "title": "Sifu",
+      "release_year": 2022
+    },
+    {
+      "id": "27",
+      "title": "Tunic",
+      "release_year": 2022
+    },
+    {
+      "id": "28",
+      "title": "A Plague Tale: Requiem",
+      "release_year": 2022
+    },
+    {
+      "id": "29",
+      "title": "Hi-Fi Rush",
+      "release_year": 2023
+    },
+    {
+      "id": "30",
+      "title": "Alan Wake 2",
+      "release_year": 2023
+    },
+    {
+      "id": "31",
+      "title": "Resident Evil 4 Remake",
+      "release_year": 2023
+    },
+    {
+      "id": "32",
+      "title": "Street Fighter 6",
+      "release_year": 2023
+    },
+    {
+      "id": "33",
+      "title": "Lies of P",
+      "release_year": 2023
+    },
+    {
+      "id": "34",
+      "title": "Armored Core VI: Fires of Rubicon",
+      "release_year": 2023
+    },
+    {
+      "id": "35",
+      "title": "Super Mario Bros. Wonder",
+      "release_year": 2023
+    },
+    {
+      "id": "36",
+      "title": "Hogwarts Legacy",
+      "release_year": 2023
+    },
+    {
+      "id": "37",
+      "title": "Dead Space Remake",
+      "release_year": 2023
+    },
+    {
+      "id": "38",
+      "title": "Diablo IV",
+      "release_year": 2023
+    },
+    {
+      "id": "39",
+      "title": "Persona 3 Reload",
+      "release_year": 2024
+    },
+    {
+      "id": "40",
+      "title": "Tekken 8",
+      "release_year": 2024
+    },
+    {
+      "id": "41",
+      "title": "Prince of Persia: The Lost Crown",
+      "release_year": 2024
+    },
+    {
+      "id": "42",
+      "title": "Helldivers 2",
+      "release_year": 2024
+    },
+    {
+      "id": "43",
+      "title": "Final Fantasy VII Rebirth",
+      "release_year": 2024
+    },
+    {
+      "id": "44",
+      "title": "Dragon's Dogma 2",
+      "release_year": 2024
+    },
+    {
+      "id": "45",
+      "title": "Stellar Blade",
+      "release_year": 2024
+    },
+    {
+      "id": "46",
+      "title": "Metaphor: ReFantazio",
+      "release_year": 2024
+    },
+    {
+      "id": "47",
+      "title": "Black Myth: Wukong",
+      "release_year": 2024
+    },
+    {
+      "id": "48",
+      "title": "Astro Bot",
+      "release_year": 2024
+    },
+    {
+      "id": "49",
+      "title": "Call of Duty: Black Ops 6",
+      "release_year": 2024
+    },
+    {
+      "id": "50",
+      "title": "Indiana Jones and the Great Circle",
+      "release_year": 2024
     }
   ],
   "lists": [
@@ -38,6 +278,11 @@
       "id": "4",
       "userid": "1",
       "listname": "asdasd"
+    },
+    {
+      "id": "5",
+      "userid": "2",
+      "listname": "newList"
     }
   ],
   "videogames_lists": [
@@ -100,6 +345,76 @@
       "id": "28",
       "videogameid": "2",
       "listid": "3"
+    },
+    {
+      "id": "29",
+      "videogameid": "49",
+      "listid": "5"
+    },
+    {
+      "id": "30",
+      "videogameid": "4",
+      "listid": "5"
+    },
+    {
+      "id": "31",
+      "videogameid": "18",
+      "listid": "5"
+    },
+    {
+      "id": "32",
+      "videogameid": "44",
+      "listid": "5"
+    },
+    {
+      "id": "33",
+      "videogameid": "21",
+      "listid": "5"
+    },
+    {
+      "id": "42",
+      "videogameid": "37",
+      "listid": "5"
+    },
+    {
+      "id": "43",
+      "videogameid": "7",
+      "listid": "5"
+    },
+    {
+      "id": "44",
+      "videogameid": "38",
+      "listid": "5"
+    },
+    {
+      "id": "45",
+      "videogameid": "43",
+      "listid": "5"
+    },
+    {
+      "id": "46",
+      "videogameid": "17",
+      "listid": "5"
+    },
+    {
+      "id": "47",
+      "videogameid": "3",
+      "listid": "5"
+    },
+    {
+      "id": "48",
+      "videogameid": "2",
+      "listid": "5"
+    },
+    {
+      "id": "49",
+      "videogameid": "8",
+      "listid": "5"
+    },
+    {
+      "id": "50",
+      "videogameid": "42",
+      "listid": "5"
     }
   ]
 }
