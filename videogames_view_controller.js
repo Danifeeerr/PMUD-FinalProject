@@ -5,7 +5,7 @@ $(function() {
   let userId = parseInt(localStorage.getItem("userId"));
   let videogames, lists, listId, listGames, isNewListMode = false;
 
-
+// Comunicació amb API
 async function api(endpoint, options = {}) {
   const response = await fetch(`${API}${endpoint}`, {
     headers: {'Content-Type': 'application/json'},
@@ -16,16 +16,19 @@ async function api(endpoint, options = {}) {
   return text ? JSON.parse(text) : null;
 }
 
+// Mostra un error al header durant 5 segons
 const showError = (msg) => {
   $('#header>.message').html(msg);
   setTimeout(() => $('#header>.message').html(""), 5000);
 };
 
+// Mostra/oculta elements
 const toggle = (show, hide) => {
   $(show.join(',')).show();
   $(hide.join(',')).hide();
 };
 
+// Pinta les llistes
 const renderLists = (lists) => lists.map(l => `
   <div class="list-card" data-id="${l.id}">
     <div class="list-card-header">
@@ -35,12 +38,14 @@ const renderLists = (lists) => lists.map(l => `
     <div class="list-card-footer">Click to view games</div>
   </div>`).join('');
 
+  // Pinta els jocs
 const renderGames = (games) => games.map(g => `
   <div class="videogame-card" data-id="${g.id}">
     <span>${g.title}</span>
     <span class="year">${g.release_year}</span>
   </div>`).join('');
 
+// Pinta els jocs d'una llista
 const renderListGames = (listGames) => listGames.length ? listGames.map(lg => `
   <div class="popup-game-item" data-id="${lg.id}">
     <div class="game-info">
@@ -50,6 +55,7 @@ const renderListGames = (listGames) => listGames.length ? listGames.map(lg => `
     <img class="remove" data-id="${lg.id}" src="public/icon_delete.png"/>
   </div>`).join('') : '<p class="empty-list">No games yet</p>';
 
+  // Gestió de popups
 const popups = {
   open: (id, callback) => {
     $(`#${id}`).show();
@@ -67,12 +73,13 @@ const popups = {
     listId = undefined;
   }
 };
-
+ // Popup de confirmació
 const confirm = (message, onYes) => {
   $('#confirm-popup-message').text(message);
   $('#confirm-popup-overlay').data('onConfirm', onYes).show();
 };
 
+// Login i gestió de sessió
 async function login(isCreate) {
   username = $('#header>input.username').val();
   const password = $('#header>input.password').val();
@@ -107,6 +114,7 @@ async function login(isCreate) {
   }
 }
 
+// Logout
 function logout() {
   userId = undefined;
   username = "";
@@ -117,6 +125,7 @@ function logout() {
   popups.closeAll();
 }
 
+// Carrega les llistes de l'usuari
 async function loadLists() {
   try {
     lists = await api(`/lists?userid=${userId}`);
@@ -131,6 +140,7 @@ async function loadLists() {
   }
 }
 
+// Esborra una llista
 async function deleteList(id) {
   const list = lists.find(l => l.id == id);
   confirm(`Delete "${list.listname}"?`, async () => {
@@ -145,6 +155,7 @@ async function deleteList(id) {
   });
 }
 
+// Inicia la creació d'una nova llista
 async function startNewList() {
   try {
     videogames = await api('/videogames');
@@ -157,10 +168,12 @@ async function startNewList() {
   }
 }
 
+// Popup per posar nom a la nova llista
 async function saveNewList() {
   popups.open('name-popup-overlay', () => $('#list-name-input').val('').focus());
 }
 
+// Confirma el nom de la nova llista i la crea
 async function confirmListName() {
   const name = $('#list-name-input').val().trim();
   if (!name) return $('#name-popup-error').text('Enter a name').show();
@@ -189,6 +202,7 @@ async function confirmListName() {
   }
 }
 
+// Cerca llistes o jocs segons el mode
 function search(query) {
   const q = query.toLowerCase();
   if (isNewListMode) {
@@ -200,6 +214,7 @@ function search(query) {
   }
 }
 
+// Mostra els jocs d'una llista ????????????????????????????????????????????????????????????
 async function openList(id) {
   listId = id;
   const list = lists.find(l => l.id == id);
@@ -210,6 +225,7 @@ async function openList(id) {
   loadListGames();
 }
 
+// Dona tots els jocs d'una llista ????????????????????????????????????????????????????????????
 async function loadListGames() {
   try {
     listGames = await api(`/videogames_lists?_expand=videogame&listid=${listId}`);
@@ -223,6 +239,7 @@ async function loadListGames() {
   }
 }
 
+// Esborra un joc d'una llista
 async function removeGame(id) {
   confirm("Remove game?", async () => {
     try {
@@ -235,6 +252,7 @@ async function removeGame(id) {
   });
 }
 
+// Obre el popup per afegir jocs a la llista
 async function openAddGames() {
   try {
     videogames = await api('/videogames');
@@ -250,6 +268,7 @@ async function openAddGames() {
   }
 }
 
+// Afegeix els jocs seleccionats a la llista
 async function addGames() {
   const gameIds = $('#add-games-content .videogame-card.active').map((i, e) => $(e).data('id')).get();
   if (!gameIds.length) return alert("Select games");
@@ -269,6 +288,7 @@ async function addGames() {
   }
 }
 
+// Cerca jocs per afegir a la llista
 function searchAddGames(query) {
   const existing = listGames.map(lg => lg.videogame.id);
   const filtered = videogames.filter(g => 
@@ -278,7 +298,7 @@ function searchAddGames(query) {
   $('#add-games-content').html(renderGames(filtered));
 }
 
-// EVENTS
+
 $(document).on('keypress', '#header>input.password', (e) => {
   if (e.keyCode === 13) login(false);
 });
@@ -355,7 +375,7 @@ $(document).on('click', '#confirm-popup-yes', () => {
 });
 $(document).on('click', '#confirm-popup-no', () => popups.close('confirm-popup-overlay'));
 
-
+// Inici de sessió automàtic si hi ha dades a localStorage
 if (userId && !isNaN(userId) && username) {
   toggle(['#header>.logout', '#header>.username-display', '#lists'],
          ['#header>input', '#header>button.login', '#header>button.create']);

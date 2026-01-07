@@ -7,6 +7,8 @@
 </head>
 
 <body>
+	
+	<!-- Barra superior de login i registre o de visualització del usuari i logout-->
 	<div id="header">
 		<input class="username" type="text" placeholder="user name">
 		<input class="password" type="password" placeholder="password">
@@ -16,7 +18,8 @@
 		<img class="logout" title="Logout" src="public/icon_logout.png"/>
 		<footer class="message"></footer>
 	</div>
-  
+	
+	<!-- Panel principal de llistes amb botó de creació de llistes -->
 	<div id="lists">
 		<div class="lists-header">
 			<h2>My Game Lists</h2>
@@ -28,8 +31,8 @@
 		<img class="dsearch" title="Clean Search" src="public/icon_delete.png"/>
 		<section class="content"></section>
 	</div>
-
-
+	
+	<!-- Popup per visualitzar els jocs d'una llista i per esborrar-los -->
 	<div id="popup-overlay" style="display: none;">
 		<div id="popup-modal">
 			<div class="popup-header">
@@ -43,62 +46,63 @@
 			<section class="popup-content"></section>
 		</div>
 	</div>
-
+	
+	<!-- Popup per demanar el nom de la nova llista i crearla -->
+	<div id="name-popup-overlay" style="display: none;">
+		<div id="name-popup">
+			<div class="name-popup-header">
+				<h3>Enter List Name</h3>
+			</div>
+			<div class="name-popup-body">
+				<input type="text" id="list-name-input" placeholder="My awesome list..." maxlength="50">
+				<span id="name-popup-error" style="display: none;"></span>
+			</div>
+			<div class="name-popup-footer">
+				<button id="name-popup-cancel" class="btn-secondary">Cancel</button>
+				<button id="name-popup-confirm" class="btn-primary">Create List</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Popup de confirmació per esborrar llistes o jocs -->
+	<div id="confirm-popup-overlay" style="display: none;">
+		<div id="confirm-popup">
+			<div class="confirm-popup-header">
+				<h3>Confirm Action</h3>
+			</div>
+			<div class="confirm-popup-body">
+				<p id="confirm-popup-message"></p>
+			</div>
+			<div class="confirm-popup-footer">
+				<button id="confirm-popup-no" class="btn-secondary">No</button>
+				<button id="confirm-popup-yes" class="btn-danger">Yes</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	<!-- Botó per afegir jocs a una llista -->
+	<button id="add-games-button">+ Add Games</button>
+	
+	<!-- Popup per afegir jocs a una llista existent -->
+	<div id="add-games-popup-overlay" style="display: none;">
+		<div id="add-games-popup">
+			<div class="add-games-popup-header">
+				<h3>Add Games to List</h3>
+			</div>
+			<div class="add-games-popup-search">
+				<input type="text" id="add-games-search" placeholder="Search games...">
+				<img id="add-games-dsearch" title="Clean Search" src="public/icon_delete.png"/>
+			</div>
+			<div id="add-games-content"></div>
+			<div class="add-games-popup-footer">
+				<button id="add-games-cancel" class="btn-secondary">Cancel</button>
+				<button id="add-games-confirm" class="btn-primary">Add Selected</button>
+			</div>
+		</div>
+	</div>
+	
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="videogames_view_controller.js"></script>
-
-	<div id="name-popup-overlay" style="display: none;">
-	<div id="name-popup">
-		<div class="name-popup-header">
-		<h3>Enter List Name</h3>
-		</div>
-		<div class="name-popup-body">
-		<input type="text" id="list-name-input" placeholder="My awesome list..." maxlength="50">
-		<span id="name-popup-error" style="display: none;"></span>
-		</div>
-		<div class="name-popup-footer">
-		<button id="name-popup-cancel" class="btn-secondary">Cancel</button>
-		<button id="name-popup-confirm" class="btn-primary">Create List</button>
-		</div>
-	</div>
-	</div>
-
-	<div id="confirm-popup-overlay" style="display: none;">
-	<div id="confirm-popup">
-		<div class="confirm-popup-header">
-		<h3>Confirm Action</h3>
-		</div>
-		<div class="confirm-popup-body">
-		<p id="confirm-popup-message"></p>
-		</div>
-		<div class="confirm-popup-footer">
-		<button id="confirm-popup-no" class="btn-secondary">No</button>
-		<button id="confirm-popup-yes" class="btn-danger">Yes</button>
-		</div>
-	</div>
-	</div>
-
-
-
-	<button id="add-games-button">+ Add Games</button>
-
-
-	<div id="add-games-popup-overlay" style="display: none;">
-	<div id="add-games-popup">
-		<div class="add-games-popup-header">
-		<h3>Add Games to List</h3>
-		</div>
-		<div class="add-games-popup-search">
-		<input type="text" id="add-games-search" placeholder="Search games...">
-		<img id="add-games-dsearch" title="Clean Search" src="public/icon_delete.png"/>
-		</div>
-		<div id="add-games-content"></div>
-		<div class="add-games-popup-footer">
-		<button id="add-games-cancel" class="btn-secondary">Cancel</button>
-		<button id="add-games-confirm" class="btn-primary">Add Selected</button>
-		</div>
-	</div>
-	</div>
-
 </body>
 </html>
