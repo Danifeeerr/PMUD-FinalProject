@@ -44,37 +44,41 @@ const deleteById = (collection, id, cascade) => {
   return true;
 };
 
-// Users
+// Tots els usuaris
 app.get('/users', (req, res) => {
   const users = getAll('users', req.query.username ? u => u.username === req.query.username : null);
   res.json(users);
 });
 
+// Crea un usuari
 app.post('/users', (req, res) => {
   const user = create('users', { username: req.body.username, password: req.body.password });
   res.status(201).json(user);
 });
 
-// Videogames
+// Tots els videojocs
 app.get('/videogames', (req, res) => res.json(getAll('videogames')));
 
 
-// Lists
+// Totes les llistes d'un usuari
 app.get('/lists', (req, res) => {
   const lists = getAll('lists', req.query.userid ? l => l.userid === req.query.userid : null);
   res.json(lists);
 });
 
+// Una llista per id
 app.get('/lists/:id', (req, res) => {
   const list = getById('lists', req.params.id);
   list ? res.json(list) : res.status(404).json({ error: 'Not found' });
 });
 
+// Crea una llista
 app.post('/lists', (req, res) => {
   const list = create('lists', { userid: req.body.userid, listname: req.body.listname });
   res.status(201).json(list);
 });
 
+// Esborra una llista per id
 app.delete('/lists/:id', (req, res) => {
   const deleted = deleteById('lists', req.params.id, (db, id) => {
     db.videogames_lists = db.videogames_lists.filter(vl => vl.listid !== id);
@@ -82,7 +86,7 @@ app.delete('/lists/:id', (req, res) => {
   deleted ? res.status(204).send() : res.status(404).json({ error: 'Not found' });
 });
 
-// Videogames_lists
+// Torna tots els videojocs d'una llista
 app.get('/videogames_lists', (req, res) => {
   const db = readDB();
   let items = db.videogames_lists;
@@ -101,6 +105,7 @@ app.get('/videogames_lists', (req, res) => {
   res.json(items);
 });
 
+// Afegeix un videojoc a una llista
 app.post('/videogames_lists', (req, res) => {
   const relation = create('videogames_lists', {
     videogameid: req.body.videogameid,
@@ -109,6 +114,7 @@ app.post('/videogames_lists', (req, res) => {
   res.status(201).json(relation);
 });
 
+// Esborra un videojoc d'una llista
 app.delete('/videogames_lists/:id', (req, res) => {
   const deleted = deleteById('videogames_lists', req.params.id);
   deleted ? res.status(204).send() : res.status(404).json({ error: 'Not found' });
