@@ -355,12 +355,15 @@ $(document).on('click', '#confirm-popup-yes', () => {
 });
 $(document).on('click', '#confirm-popup-no', () => popups.close('confirm-popup-overlay'));
 
-// Auto-login
-if (userId && username) {
+
+if (userId && !isNaN(userId) && username) {
   toggle(['#header>.logout', '#header>.username-display', '#lists'],
          ['#header>input', '#header>button.login', '#header>button.create']);
   $('#header>.username-display').text(username);
   loadLists();
+} else {
+  toggle(['#header>input', '#header>button.login', '#header>button.create'],
+         ['#header>.logout', '#header>.username-display', '#lists']);
 }
 
 });
