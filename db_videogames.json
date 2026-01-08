@@ -7,13 +7,18 @@
     },
     {
       "id": "2",
-      "username": "Danifer",
+      "username": "danifer",
       "password": "siome"
     },
     {
       "id": "3",
       "username": "JordiEsteve",
       "password": "jordi"
+    },
+    {
+      "id": "4",
+      "username": "demo2",
+      "password": "demo2"
     }
   ],
   "videogames": [
@@ -285,11 +290,6 @@
       "listname": "Jocs a comprar"
     },
     {
-      "id": "8",
-      "userid": "2",
-      "listname": "Jocs preferits"
-    },
-    {
       "id": "9",
       "userid": "3",
       "listname": "Els meus jocs preferits"
@@ -298,6 +298,31 @@
       "id": "10",
       "userid": "3",
       "listname": "Pendents"
+    },
+    {
+      "id": "11",
+      "userid": "2",
+      "listname": "Nova llista"
+    },
+    {
+      "id": "12",
+      "userid": "4",
+      "listname": "llista1"
+    },
+    {
+      "id": "13",
+      "userid": "2",
+      "listname": "astro list"
+    },
+    {
+      "id": "14",
+      "userid": "2",
+      "listname": "Jocs a futur"
+    },
+    {
+      "id": "15",
+      "userid": "2",
+      "listname": "llista mobil"
     }
   ],
   "videogames_lists": [
@@ -310,11 +335,6 @@
       "id": "26",
       "videogameid": "1",
       "listid": "1"
-    },
-    {
-      "id": "33",
-      "videogameid": "48",
-      "listid": "6"
     },
     {
       "id": "34",
@@ -362,21 +382,6 @@
       "listid": "7"
     },
     {
-      "id": "43",
-      "videogameid": "1",
-      "listid": "8"
-    },
-    {
-      "id": "44",
-      "videogameid": "16",
-      "listid": "8"
-    },
-    {
-      "id": "45",
-      "videogameid": "35",
-      "listid": "8"
-    },
-    {
       "id": "46",
       "videogameid": "18",
       "listid": "9"
@@ -400,6 +405,66 @@
       "id": "50",
       "videogameid": "15",
       "listid": "9"
+    },
+    {
+      "id": "51",
+      "videogameid": "20",
+      "listid": "6"
+    },
+    {
+      "id": "52",
+      "videogameid": "48",
+      "listid": "11"
+    },
+    {
+      "id": "53",
+      "videogameid": "5",
+      "listid": "11"
+    },
+    {
+      "id": "54",
+      "videogameid": "49",
+      "listid": "11"
+    },
+    {
+      "id": "55",
+      "videogameid": "4",
+      "listid": "11"
+    },
+    {
+      "id": "56",
+      "videogameid": "8",
+      "listid": "11"
+    },
+    {
+      "id": "57",
+      "videogameid": "28",
+      "listid": "12"
+    },
+    {
+      "id": "58",
+      "videogameid": "48",
+      "listid": "12"
+    },
+    {
+      "id": "59",
+      "videogameid": "48",
+      "listid": "13"
+    },
+    {
+      "id": "60",
+      "videogameid": "14",
+      "listid": "15"
+    },
+    {
+      "id": "61",
+      "videogameid": "46",
+      "listid": "15"
+    },
+    {
+      "id": "62",
+      "videogameid": "39",
+      "listid": "15"
     }
   ]
 }
